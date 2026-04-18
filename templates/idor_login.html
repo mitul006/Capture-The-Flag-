@@ -1,0 +1,139 @@
+<html>
+
+<head>
+    <script>
+        function sec_login(){
+            var http = new XMLHttpRequest();
+            var url = '/seclgn';
+            var username = document.getElementById('sec_uname').value;
+            var password = document.getElementById('sec_pwd').value;
+            var enc_uname=encrypt(username);
+            var enc_pass=encrypt(password);
+            //var params = 'sec_uname='+enc_uname+'&sec_pwd='+enc_pass;
+            var params = JSON.stringify({'sec_uname':enc_uname,'sec_pwd':enc_pass})
+            http.open('POST', url, true);
+
+            //Send the proper header information along with the request
+            http.setRequestHeader('Content-type', 'application/json');
+            http.onreadystatechange = function() {//Call a function when the state changes.
+                if(http.readyState == 4) {
+                    var json_response=JSON.parse(http.responseText);
+                    //console.log(json_respone);
+
+                    //Iterating the JSON response to check the response code
+
+                    var user_token=json_response['user_token'];
+                    //console.log(user_token)
+                    if(user_token){
+                        //Login with a user token
+                        window.location.href = '/secdashboard/user/'+encodeURIComponent(user_token);
+                        //console.log(json_respone);
+                    }
+                    else{
+                        document.getElementById("error").innerHTML=json_response["Error"]
+                    }
+                }
+            }
+            http.send(params);
+        }
+
+        function encrypt(plain_text){
+            let characters = [];
+            for (let i = 33; i < 127; i++) {
+            characters.push(String.fromCharCode(i));
+            }
+
+            let character_indexes = [];
+            for (let i = 0; i < 95; i++) {
+            character_indexes.push(i);
+            }
+
+            let character_dict = {};
+            for (let i = 0; i < characters.length; i++) {
+            character_dict[characters[i]] = character_indexes[i];
+            }
+            
+            //Doing this because encrypting \ would make i \\ as python's default behaviour
+            character_dict['à'] = character_dict['\\'];
+            delete character_dict['\\'];
+            
+            //Doing this so that it doesn't break the JSON
+            character_dict['ê'] = character_dict['"'];
+            delete character_dict['"'];
+
+            //Doing this so that it doesnt break user token while redirectig to dashboard
+            character_dict['¢'] = character_dict['/'];
+            delete character_dict['/'];
+
+            //Doing this so that the data isn't considered as a query string
+            character_dict['Þ']=character_dict['?'];
+            delete character_dict['?']
+            //console.log("\n\n", character_dict);
+
+            //Merging all character sets to generate a strong key
+            let big_list = [];
+            for (let i = 48; i < 127; i++) {
+                if(i==63){
+                    //pass;
+                }
+                else{
+                    big_list.push(String.fromCharCode(i));
+                }
+            }
+
+            const indexToRemove = big_list.indexOf('\\');
+            if (indexToRemove !== -1) {
+                big_list.splice(indexToRemove, 1);
+            }
+
+            let sec_key = "";
+
+            while (sec_key.length < plain_text.length) {
+            let temp = big_list[Math.floor(Math.random() * big_list.length)];
+            sec_key = sec_key + temp;
+            }
+
+            console.log("Randomly generated key is : " + sec_key);
+
+            let cipher_text = "";
+
+            //encryption using random key
+            for (let i = 0; i < sec_key.length; i++) {
+            let index = (character_dict[plain_text[i]] + character_dict[sec_key[i]]) % 94;
+            for (let temp in character_dict) {
+                if (character_dict[temp] === index) {
+                cipher_text += temp;
+                }
+            }
+            }
+
+            console.log("The cipher text is: "+cipher_text)
+            cipher_text=cipher_text.concat('øøø');
+            return cipher_text.concat(sec_key);
+        }
+    </script>
+</head>
+
+<body>
+    <center>
+        <h1><b>Security System Login Portal</b></h1>
+        <br><br><br>
+        <form method="POST">
+            <font color="red">
+                Username: <input type="textbox" name="sec_uname" id="sec_uname">
+                <br><br>
+                Password: <input type="password" name="sec_pwd" id="sec_pwd">
+                <br><br>
+                <button type="button" onclick="sec_login()">Login</button>
+                <br><br>
+                <div id="error">
+                    {{login_error}}
+                </div>
+            </font>
+        </form>
+        <br><br><br>
+        <font color="green"><h2>#KeepItSafe</h2></font>
+    </center>
+</body>
+
+</html>

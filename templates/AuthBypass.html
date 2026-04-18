@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Challenge 1</title>
+
+        <!--Initialising JQuery for AJAX-->
+        <script>
+            function authenticate(){
+                var http = new XMLHttpRequest();
+                var url = '/challenge1/login';
+                var username = document.getElementById('uname').value;
+                var password = document.getElementById('pwd').value;
+                var params = 'uname='+username+'&pwd='+password;
+                http.open('POST', url, true);
+
+                //Send the proper header information along with the request
+                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                http.onreadystatechange = function() {//Call a function when the state changes.
+                    if(http.readyState == 4) {
+                        var json_respone=JSON.parse(http.responseText);
+                        console.log(json_respone);
+
+                        //Iterating the JSON response to check the response code
+                        console.log(json_respone['status']);
+                        console.log(json_respone['user']);
+
+                        var status_code=json_respone['status'];
+                        var auth = json_respone['auth'];
+                        if(status_code==200 && auth=='validated'){
+                            //User successfully authenticated
+                            window.location.href = 'user/dashboard/session/'+json_respone['login_cookie'];
+                        }
+                        else if(status_code==401 || auth=="unvalidated"){
+                            document.getElementById('error').innerHTML= "Invalid username or Password! Please try again."
+                        }
+                        else{
+                            document.getElementById('error').innerHTML= "Internal Server Error! Please try again later."
+                        }
+                    }
+                }
+                http.send(params);
+            }
+        </script>
+    </head>
+    <body>
+        <center>
+        <h1><b>User Login</b></h1>
+        <br><br><br>
+        <!--Hey there sunshine!-->
+        <form method="POST">
+            Username: <input type="text" id="uname" name="uname" value="{{username}}"> 
+            <br><br><br>
+            Password: <input type="password" id="pwd" name="pwd"> 
+            <br><br>
+            <button type="button" id="login" onclick="authenticate()">Login</button>
+        </form>
+        <font color="red" id="error"></font>
+        </center>
+    </body>
+</html>

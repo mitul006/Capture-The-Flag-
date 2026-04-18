@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>Challenge 2</title>
+    <script>
+        function submit_flag(){
+            var http = new XMLHttpRequest();
+            http.open('POST','/challenge2/submit/flag',true);
+            var flag = document.getElementById('flag').value;
+            
+            //Client side flag validation to aware the user
+            re = new RegExp("CTF\{.*\}")
+            if(re.test(flag)==false){
+                return alert("The flag should match the CTF standard regex!!!");
+            }
+            else{
+                params="flag="+flag;
+                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                http.onreadystatechange = function(){//Call a function when the state changes.
+                if(http.readyState == 4){
+                    alert(http.responseText);
+                    if(http.status==200){
+                        document.body.innerHTML="<center><h2><font color='green'>Congratulations Hax0r, You've passed this challenge!!</h2></font></center>"
+                    }
+                }
+            }
+        }
+        http.send(params);
+    }
+    </script>
+</head>
+<body>
+    <center>
+        <h1>Hello World!!! This is my first website. I am an amature programmer and am learning how to develop web apps :)</h1>
+        <br><br><br>
+        <form method="GET" action="/challenge2">
+            Enter your name: <input type="text" id="pname" name="pname">
+            <br><br>
+            <input type="submit">
+            <br><br>
+            <font color="red"><div id="response"><h2>{{message}}</h2></div></font>
+        </form>
+    
+
+    <!--
+    <form method="POST" action="/challenge2/submit/flag">
+        Got a FLAG??: <input type="text" id="flag" name="flag">
+        <br><br>
+        <button type="button" onclick="submit_flag()">Submit</button>
+        <br><br>
+    </form>-->
+</center>
+</body>
+</html>

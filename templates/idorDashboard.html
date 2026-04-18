@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>SEC Security Dashboard</title>
+        <script>
+            function get_online_users(){
+                var http = new XMLHttpRequest();
+                var url = '/secDashboard/getUsers';
+                //Send the proper header information along with the request
+                http.open('GET', url, true);
+                http.setRequestHeader('Content-type', 'application/json');
+                http.onreadystatechange = function() {//Call a function when the state changes.
+                    if(http.readyState == 4) {
+                        var json_response=JSON.parse(http.responseText);
+                            document.getElementById("usr_btn").style.display = "none"
+                            document.getElementById("usr_txt").innerHTML=json_response.length;
+                            document.getElementById("usr_txt").style.display = "block"
+                        }
+                    }
+                http.send();
+            }
+            
+        
+        </script>
+    </head>
+    <body>
+        <center>
+            <h1><font color="Red">Welcome User:</font> <font color="green">{{dec_user}}</font></h1>
+            <br><br><br>
+            <table>
+                <th>
+                    No.
+                </th>
+                <th>
+                    Entity
+                </th>
+                <th>
+                    Attribute
+                </th>
+                <tr>
+                    <td>1.</td>
+                    <td>User Files</td>
+                    <td style="text-align: center;"><a href="/user/{{enc_user}}/ViewFiles">View</a></td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Role</td>
+                    <td style="text-align: center;">{{Role}}</a></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Online Users</td>
+                    <td><center><button type="button" onclick="get_online_users()" id='usr_btn'>View</button></center>
+                    <p id="usr_txt" style="display: hidden; text-align: center;"></p>
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>User Files</title>
+    </head>
+    <body>
+        <h2>
+        <ol type="I">
+            {% for file in file_list %}
+                <li><a href=/user/{{user}}/preview/{{file}}>{{file}}</a></li>
+                <br>
+                <br>
+            {% endfor %}
+        </ol>
+        </h2>
+    </body>
+</html>

@@ -1,0 +1,25 @@
+<html>
+<head>
+    <title>Submit Flag</title>
+</head>
+<body>
+<center>
+    <h2><font color="green">Congratulations, you've successfully completed the challenge!</font></h2>    
+    <br><br><br><br>
+    <form action="/" method="POST">
+        <input type="hidden" name="flag" value="CTF{SQLIPwnedS0n}">
+        <input type="hidden" name="challenge" value="challenge3">
+        <input type="hidden" name="isAdmin" value="No">
+        <input type="hidden" name="module" value="CTF">
+        <input type="hidden" name="isAsyncIo" value="Yes">
+        <input type="hidden" name="flagVector" value="bWFrZXNOb1NlbnNlQnJvIQ==">
+        <input type="submit" value="Submit Flag!!">
+    </form>
+    {{error}}<br>
+    {{flag_error}}<br>
+    {{isAdmin_error}}<br>
+    {{success}}<br>
+    Is user an Admin: {{isAdmin_bool}}
+</center>
+</body>
+</html>

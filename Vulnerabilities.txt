@@ -1,0 +1,9 @@
+1) Auth Bypass - Change response code
+2) API Rate limit - Make it like an attendance code layout That can fetch attendance records from db, overflow them like the vulnerability from the mdx app. 1000 records reveal the flag.
+3) SQL Injection - Error based SQL Injection where database name is the flag
+4) OS Command Injection
+5) Jinja2 SSTI + RCE
+6) Add an RCE where users get an exe to reverse engineer
+
+7) Encryption Decryption in web apps, create a decryption function to perform an IDOR and get the flag
+8) Create a challenge that asks the user to find the vulnerability and fix it, to reveal the flag

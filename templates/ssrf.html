@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>Challenge 5</title>
+    </head>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        // Create a wrapper for the XMLHTTP object
+        function sendRequest(method, url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                callback(xhr.responseText);
+            }
+            };
+            xhr.send();
+        }
+
+        // Send a GET request to a route when the document loads
+        sendRequest('GET', '/challenge5/banned-routes', function(response) {
+            // Handle the response
+            console.log(response);
+        });
+        });
+    </script>
+    <body>
+        <center>
+            <h2>What's your favourite website?</h2>
+            <br>
+            <form action="/challenge5" method="POST">
+            <input type="text" id="url" name="url">
+            <br>
+            <br>
+            <input type="submit">
+            </form>
+
+            <img src="{{url_for('static',filename='challenge5/ss/'+img)}}" height="600px" width="1200px" alt="Image can't be displayed!">
+        </center>
+    </body>
+</html>
